@@ -2,12 +2,12 @@ name: "default-network"
 description: "The network description"
 version: 1.0.0
 client:
-  organization: member1.example.com
+  organization: org1.example.com
   logging:
     level: info
   cryptoconfig:
     path: ../crypto-config
-    #path: /opt/app/fabric/cli/user/member1.example.com/Admin-peer0.member1.example.com
+    #path: /opt/app/fabric/cli/user/org1.example.com/Admin-peer0.org1.example.com
   credentialStore:
     path: /tmp/
     cryptoStore:
@@ -24,15 +24,15 @@ client:
     systemCertPool: true
     client:
       key:
-        path: ../crypto-config/peerOrganizations/member1.example.com/users/Admin@member1.example.com/tls/client.key
-        #path: /opt/app/fabric/cli/user/member1.example.com/Admin-peer0.member1.example.com/tls/client.key
+        path: ../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/tls/client.key
+        #path: /opt/app/fabric/cli/user/org1.example.com/Admin-peer0.org1.example.com/tls/client.key
       cert:
-        path: ../crypto-config/peerOrganizations/member1.example.com/users/Admin@member1.example.com/tls/client.crt
-        #path: /opt/app/fabric/cli/user/member1.example.com/Admin-peer0.member1.example.com/tls/client.crt
+        path: ../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/tls/client.crt
+        #path: /opt/app/fabric/cli/user/org1.example.com/Admin-peer0.org1.example.com/tls/client.crt
 channels:
   mychannel:
     peers:
-      peer0.member1.example.com:
+      peer0.org1.example.com:
         endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
@@ -47,43 +47,43 @@ channels:
           maxBackoff: 5s
           backoffFactor: 2.0
 organizations:
-  member1.example.com:
-    mspid: peers.member1.example.com
-    cryptoPath: peerOrganizations/member1.example.com/users/Admin@member1.example.com/msp/
+  org1.example.com:
+    mspid: Org1MSP
+    cryptoPath: peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/
     #cryptoPath: msp/
     peers:
-      - peer0.member1.example.com
+      - peer0.org1.example.com
 orderers:
-  orderer0.member1.example.com:
-    url: orderer0.member1.example.com:7050
+  orderer.example.com:
+    url: orderer.example.com:7050
     grpcOptions:
-      ssl-target-name-override: orderer0.member1.example.com
+      ssl-target-name-override: orderer.example.com
       keep-alive-time: 0s
       keep-alive-timeout: 20s
       keep-alive-permit: false
       fail-fast: false
       allow-insecure: false
     tlsCACerts:
-      path: ../crypto-config/ordererOrganizations/member1.example.com/tlsca/tlsca.member1.example.com-cert.pem
-      #path: /opt/app/fabric/cli/user/member1.example.com/Admin-peer0.member1.example.com/tlsca.member1.example.com-cert.pem
+      path: ../crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+      #path: /opt/app/fabric/cli/user/org1.example.com/Admin-peer0.org1.example.com/tlsca.org1.example.com-cert.pem
 peers:
-  peer0.member1.example.com:
-    url: peer0.member1.example.com:7051
-    eventUrl: peer0.member1.example.com:7053
+  peer0.org1.example.com:
+    url: peer0.org1.example.com:7051
+    eventUrl: peer0.org1.example.com:7053
     grpcOptions:
-      ssl-target-name-override: peer0.member1.example.com
+      ssl-target-name-override: peer0.org1.example.com
       keep-alive-time: 0s
       keep-alive-timeout: 20s
       keep-alive-permit: false
       fail-fast: false
       allow-insecure: false
     tlsCACerts:
-      path: ../crypto-config/peerOrganizations/member1.example.com/peers/peer0.member1.example.com/tls/ca.crt
-      #path: /opt/app/fabric/cli/user/member1.example.com/Admin-peer0.member1.example.com/tls/ca.crt
+      path: ../crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      #path: /opt/app/fabric/cli/user/org1.example.com/Admin-peer0.org1.example.com/tls/ca.crt
 
 entityMatchers:
   orderer:
-    - pattern: (\w*)orderer0.member1.example.com(\w*)
-      urlSubstitutionExp: orderer0.member1.example.com:7050
-      sslTargetOverrideUrlSubstitutionExp: orderer0.member1.example.com
-      mappedHost: orderer0.member1.example.com
+    - pattern: (\w*)orderer.example.com(\w*)
+      urlSubstitutionExp: orderer.example.com:7050
+      sslTargetOverrideUrlSubstitutionExp: orderer.example.com
+      mappedHost: orderer.example.com

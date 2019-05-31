@@ -8,11 +8,12 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/channel"
 	mspclient "github.com/hyperledger/fabric-sdk-go/pkg/client/msp"
 	"github.com/hyperledger/fabric-sdk-go/pkg/core/config"
 	"github.com/hyperledger/fabric-sdk-go/pkg/fabsdk"
-	"log"
 )
 
 func main() {
@@ -24,9 +25,9 @@ func main() {
 		log.Fatalf("create sdk fail: %s\n", err.Error())
 	}
 
-	//读取配置文件(config.yaml)中的组织(member1.example.com)的用户(Admin)
+	//读取配置文件(config.yaml)中的组织(org1.example.com)的用户(Admin)
 	mspClient, err := mspclient.New(sdk.Context(),
-		mspclient.WithOrg("member1.example.com"))
+		mspclient.WithOrg("org1.example.com"))
 	if err != nil {
 		log.Fatalf("create msp client fail: %s\n", err.Error())
 	}
@@ -42,7 +43,7 @@ func main() {
 	//调用合约
 	channelProvider := sdk.ChannelContext("mychannel",
 		fabsdk.WithUser("Admin"),
-		fabsdk.WithOrg("member1.example.com"))
+		fabsdk.WithOrg("org1.example.com"))
 
 	channelClient, err := channel.New(channelProvider)
 	if err != nil {
@@ -50,14 +51,38 @@ func main() {
 	}
 
 	var args [][]byte
-	args = append(args, []byte("key1"))
+	args = append(args, []byte("a"))
 
 	request := channel.Request{
 		ChaincodeID: "mycc",
-		Fcn:         "query",
+		Fcn:         "load",
 		Args:        args,
 	}
 	response, err := channelClient.Query(request)
+	if err != nil {
+		log.Fatal("query fail: ", err.Error())
+	} else {
+		fmt.Printf("response is %s\n", response.Payload)
+	}
+
+	args = append(args, []byte("ccc"))
+	request = channel.Request{
+		ChaincodeID: "mycc",
+		Fcn:         "save",
+		Args:        args,
+	}
+	response, err = channelClient.Execute(request)
+	if err != nil {
+		log.Fatal("Execute fail: ", err.Error())
+	}
+
+	args = args[:len(args)-1]
+	request = channel.Request{
+		ChaincodeID: "mycc",
+		Fcn:         "load",
+		Args:        args,
+	}
+	response, err = channelClient.Query(request)
 	if err != nil {
 		log.Fatal("query fail: ", err.Error())
 	} else {
